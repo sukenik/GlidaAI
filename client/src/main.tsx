@@ -1,7 +1,12 @@
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import App from './App.tsx'
+import LoginPage from './components/LoginPage.tsx'
 import PrivateRoute from './components/PrivateRoute.tsx'
 import { HOME_ROUTE, LOGIN_ROUTE } from './consts.ts'
 import './index.css'
@@ -19,7 +24,7 @@ root.render(
 		<BrowserRouter>
 			<Routes>
 				<Route path={HOME_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
-				<Route path={LOGIN_ROUTE} element={<div>{'Auth'}</div>} />
+				<Route path={LOGIN_ROUTE} element={<LoginPage />} />
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>
