@@ -8,8 +8,9 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import App from './App.tsx'
 import LoginPage from './components/LoginPage.tsx'
 import PrivateRoute from './components/PrivateRoute.tsx'
-import { HOME_ROUTE, LOGIN_ROUTE } from './consts.ts'
+import { HOME_ROUTE, SIGN_IN_ROUTE } from './consts.ts'
 import './index.css'
+import { AuthProvider } from './context/AuthContext.tsx'
 
 const rootElement = document.getElementById('root')
 
@@ -20,12 +21,14 @@ if (!rootElement) {
 const root = createRoot(rootElement!)
 
 root.render(
-	<StrictMode>
-		<BrowserRouter>
-			<Routes>
-				<Route path={HOME_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
-				<Route path={LOGIN_ROUTE} element={<LoginPage />} />
-			</Routes>
-		</BrowserRouter>
-	</StrictMode>
+	<AuthProvider>
+		<StrictMode>
+			<BrowserRouter>
+				<Routes>
+					<Route path={HOME_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
+					<Route path={SIGN_IN_ROUTE} element={<LoginPage />} />
+				</Routes>
+			</BrowserRouter>
+		</StrictMode>
+	</AuthProvider>
 )

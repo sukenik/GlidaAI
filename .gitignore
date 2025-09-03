@@ -2,3 +2,4 @@
 */.env
 
 /client/.vite
+/client/.env.*
