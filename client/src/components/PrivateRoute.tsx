@@ -1,15 +1,16 @@
 import type { JSX } from 'react'
 import { Navigate } from 'react-router'
-import { LOGIN_ROUTE } from '../consts'
+import { SIGN_IN_ROUTE } from '../consts'
+import { useAuth } from '../context/AuthContext'
 
 interface iProps {
     children: JSX.Element
 }
 
 const PrivateRoute = ({ children }: iProps) => {
-    // const { currentUser } = useAuth()
+    const { currentUser } = useAuth()
 
-    return false ? children : <Navigate to={LOGIN_ROUTE} />
+    return currentUser ? children : <Navigate to={SIGN_IN_ROUTE} />
 }
 
 export default PrivateRoute
