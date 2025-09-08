@@ -93,7 +93,7 @@ async function getChat(chatId: string): Promise<iChat | null> {
 
 async function addMessage(chatId: string, content: string): Promise<void> {
     try {
-        const chatRef = await db.collection(CHATS_COLLECTION).doc(chatId)
+        const chatRef = db.collection(CHATS_COLLECTION).doc(chatId)
 		const messagesRef = chatRef.collection(MESSAGES_COLLECTION)
         
         const response = await generateResponse(content)
