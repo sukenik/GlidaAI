@@ -55,11 +55,12 @@ const TEXT_STYLE: CSSProperties = {
 
 export const EMAIL_AUTH = 'password'
 
-interface iUserModalProps {
+interface iProps {
+    open: boolean
     closeModal: () => void
 }
 
-const UserModal: FC<iUserModalProps> = ({ closeModal }) => {
+const UserModal: FC<iProps> = ({ open, closeModal }) => {
     const [error, setError] = useState('')
     const { logout, currentUser } = useAuth()
     const navigate = useNavigate()
@@ -85,7 +86,10 @@ const UserModal: FC<iUserModalProps> = ({ closeModal }) => {
 
     return (
         <div style={MODAL_STYLES} onClick={handleOutsideClick}>
-            <div style={MODAL_CONTENT_STYLES} onClick={handleContentClick}>
+            <div
+                style={open ? { ...MODAL_CONTENT_STYLES, marginLeft: '250px' } : MODAL_CONTENT_STYLES}
+                onClick={handleContentClick}
+            >
                 {error && <Alert>{error}</Alert>}
                 <div style={{ padding: 10 }}>
                     {

@@ -18,9 +18,10 @@ import { styled, useTheme, type CSSObject, type Theme } from '@mui/material/styl
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-// import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import UserModal from './components/UserModal'
+import { useAuth } from './context/AuthContext'
 
 const drawerWidth = 240
 
@@ -110,6 +111,7 @@ export default function MiniDrawer() {
     const [showUserModal, setShowUserModal] = useState(false)
 
   	const theme = useTheme()
+	const { currentUser } = useAuth()
 
 	const handleDrawerOpen = () => {
 		setOpen(true)
@@ -266,36 +268,29 @@ export default function MiniDrawer() {
 						<ListItemButton
 							onClick={handleToggleUserModal}
 							sx={[
-							{
-								minHeight: 48,
-								px: 2.5,
-							},
-							open
-								? {
-									justifyContent: 'initial',
-								}
-								: {
-									justifyContent: 'center',
+								{
+									minHeight: 48,
+									px: 2.5,
 								},
+								open
+									? { justifyContent: 'initial' }
+									: { justifyContent: 'center' }
 							]}
 						>
-							<ListItemIcon
-								sx={[
-									{
+							<ListItemIcon sx={[
+								{
 									minWidth: 0,
 									justifyContent: 'center',
-									},
-									open
-									? {
-										mr: 3,
-										}
-									: {
-										mr: 'auto',
-										},
-								]}
-							>
+								},
+								open
+									? { mr: 3 }
+									: { mr: 'auto' }
+							]}>
 								<AccountCircleOutlinedIcon />
 							</ListItemIcon>
+							{
+								open && <ListItemText primary={currentUser?.displayName ?? currentUser?.email} />
+							}
 						</ListItemButton>
 					</ListItem>
 				</Drawer>
@@ -303,7 +298,7 @@ export default function MiniDrawer() {
 					<DrawerHeader />
 				</Box>
 			</Box>
-            {showUserModal && <UserModal closeModal={handleCloseUserModal} />}
+            {showUserModal && <UserModal open={open} closeModal={handleCloseUserModal} />}
 		</>
 	)
 }
