@@ -8,10 +8,8 @@ import { SIGN_IN_ROUTE } from '../consts'
 
 const MODAL_STYLES: CSSProperties = {
     position: 'fixed',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0
+    inset: 0,
+    zIndex: 1
 }
 
 const MODAL_CONTENT_STYLES: CSSProperties = {
@@ -56,11 +54,11 @@ const TEXT_STYLE: CSSProperties = {
 export const EMAIL_AUTH = 'password'
 
 interface iProps {
-    open: boolean
+    isDrawerOpen: boolean
     closeModal: () => void
 }
 
-const UserModal: FC<iProps> = ({ open, closeModal }) => {
+const UserModal: FC<iProps> = ({ isDrawerOpen, closeModal }) => {
     const [error, setError] = useState('')
     const { logout, currentUser } = useAuth()
     const navigate = useNavigate()
@@ -87,7 +85,7 @@ const UserModal: FC<iProps> = ({ open, closeModal }) => {
     return (
         <div style={MODAL_STYLES} onClick={handleOutsideClick}>
             <div
-                style={open ? { ...MODAL_CONTENT_STYLES, marginLeft: '250px' } : MODAL_CONTENT_STYLES}
+                style={isDrawerOpen ? { ...MODAL_CONTENT_STYLES, marginLeft: '250px' } : MODAL_CONTENT_STYLES}
                 onClick={handleContentClick}
             >
                 {error && <Alert>{error}</Alert>}
