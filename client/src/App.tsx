@@ -1,15 +1,14 @@
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import MuiDrawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -18,8 +17,6 @@ import { styled, useTheme, type CSSObject, type Theme } from '@mui/material/styl
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import UserModal from './components/UserModal'
 import { useAuth } from './context/AuthContext'
 
@@ -161,110 +158,36 @@ export default function MiniDrawer() {
 					</IconButton>
 					</DrawerHeader>
 					<Divider />
-					<List>
-					{['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-						<ListItem key={text} disablePadding sx={{ display: 'block' }}>
+					<ListItem key={'new-chat'} disablePadding sx={{ display: 'block', marginBottom: 'auto' }}>
 						<ListItemButton
+							onClick={handleToggleUserModal}
 							sx={[
-							{
-								minHeight: 48,
-								px: 2.5,
-							},
-							open
-								? {
-									justifyContent: 'initial',
-								}
-								: {
-									justifyContent: 'center',
-								},
-							]}
-						>
-							<ListItemIcon
-								sx={[
-									{
-									minWidth: 0,
-									justifyContent: 'center',
-									},
-									open
-									? {
-										mr: 3,
-										}
-									: {
-										mr: 'auto',
-										},
-								]}
-							>
-							{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-							</ListItemIcon>
-							<ListItemText
-							primary={text}
-							sx={[
-								open
-								? {
-									opacity: 1,
-									}
-								: {
-									opacity: 0,
-									},
-							]}
-							/>
-						</ListItemButton>
-						</ListItem>
-					))}
-					</List>
-					<Divider />
-					<List>
-					{['All mail', 'Trash', 'Spam'].map((text, index) => (
-						<ListItem key={text} disablePadding sx={{ display: 'block' }}>
-							<ListItemButton
-								sx={[
 								{
 									minHeight: 48,
 									px: 2.5,
 								},
 								open
-									? {
-										justifyContent: 'initial',
-									}
-									: {
-										justifyContent: 'center',
-									},
-								]}
-							>
-								<ListItemIcon
-									sx={[
-										{
-										minWidth: 0,
-										justifyContent: 'center',
-										},
-										open
-										? {
-											mr: 3,
-											}
-										: {
-											mr: 'auto',
-											},
-									]}
-								>
-									{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-								</ListItemIcon>
-								<ListItemText
-									primary={text}
-									sx={[
-										open
-										? {
-											opacity: 1,
-											}
-										: {
-											opacity: 0,
-											},
-									]}
-								/>
-							</ListItemButton>
-						</ListItem>
-					))}
-					</List>
-					<ListItem key={'1'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
+									? { justifyContent: 'initial' }
+									: { justifyContent: 'center' }
+							]}
+						>
+							<ListItemIcon sx={[
+								{
+									minWidth: 0,
+									justifyContent: 'center',
+								},
+								open
+									? { mr: 3 }
+									: { mr: 'auto' }
+							]}>
+								<AddBoxOutlinedIcon />
+							</ListItemIcon>
+							{
+								open && <ListItemText primary={'New Chat'} />
+							}
+						</ListItemButton>
+					</ListItem>
+					<ListItem key={'profile'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
 						<ListItemButton
 							onClick={handleToggleUserModal}
 							sx={[
