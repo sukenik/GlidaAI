@@ -10,6 +10,9 @@ import GoogleLogo from '../assets/Google.png'
 import GitHubLogo from '../assets/GitHub.png'
 import { HOME_ROUTE } from '../consts'
 import { useAuth } from '../context/AuthContext'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const StyledBox = styled(Box)({
 	width: '100%',
@@ -28,6 +31,7 @@ const LoginPage: FC = () => {
     const [generalError, setGeneralError] = useState('')
     const [loading, setLoading] = useState(false)
     const [isSignUp, setIsSignUp] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 	
     const navigate = useNavigate()
 
@@ -43,6 +47,10 @@ const LoginPage: FC = () => {
 
 	const handleSignUpClick = () => {
 		isSignUp ? setIsSignUp(false) : setIsSignUp(true)
+	}
+
+	const handleClickShowPassword = () => {
+		setShowPassword(prevState => !prevState)
 	}
 
 	const resetErrors = () => {
@@ -131,11 +139,22 @@ const LoginPage: FC = () => {
 				/>
 				<TextField
 					value={password}
+					type={showPassword ? 'text' : 'password'}
 					onChange={handlePasswordChange}
 					label={'Password'}
 					variant={'outlined'}
 					error={!!passwordError}
 					helperText={passwordError}
+					autoComplete={'on'}
+					slotProps={{
+						input: { endAdornment: (
+							<InputAdornment position='end'>
+								<IconButton onClick={handleClickShowPassword}>
+									{showPassword ? <VisibilityOff /> : <Visibility />}
+								</IconButton>
+							</InputAdornment>
+						)}
+					}}
 				/>
 				<Button disabled={loading} onClick={handleSubmit} variant={'contained'}>{'Continue'}</Button>
 				{
