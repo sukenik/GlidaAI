@@ -1,5 +1,5 @@
 import { FieldPath, FieldValue } from 'firebase-admin/firestore'
-import { iBaseChat, iChat, iMessage } from '../entities'
+import { iBaseChat, iChat, iMessage } from '../../../entities'
 import db from '../firestore'
 import { generateResponse } from '../gemini'
 import { USERS_COLLECTION } from './users'
@@ -36,7 +36,14 @@ async function getChatsMetadata(chatIds: string[]): Promise<iBaseChat[]> {
 	return []
 }
 
-async function addChat(userId: string, content: string): Promise<void> {
+async function addChat(userId: string, content: string): Promise<iChat> {
+	let newChat: iChat = {
+		id: '',
+		title: '',
+		lastUpdate: `${FieldValue.serverTimestamp()}`,
+		messages: []
+	}
+
     try {
 		const response = await generateResponse(content)
         const title = await generateResponse(`
@@ -46,7 +53,7 @@ async function addChat(userId: string, content: string): Promise<void> {
 
         const chatRef = await db.collection(CHATS_COLLECTION).add({
 			title,
-			lastUpdate: FieldValue.serverTimestamp()
+			lastUpdate: `${FieldValue.serverTimestamp()}`
 		})
 
 		const messagesRef = chatRef.collection(MESSAGES_COLLECTION)
@@ -60,9 +67,20 @@ async function addChat(userId: string, content: string): Promise<void> {
 		})
 
         console.log('Chat successfully saved!')
-    } catch (error) {
+
+		return newChat = {
+			id: chatRef.id,
+			title,
+			lastUpdate: `${FieldValue.serverTimestamp()}`,
+			messages: [{ content, response }]
+		}
+    }
+	catch (error) {
         console.error('Error adding chat: ', error)
     }
+	finally {
+		return newChat
+	}
 }
 
 async function getChat(chatId: string): Promise<iChat | null> {
@@ -109,4 +127,6 @@ async function addMessage(chatId: string, content: string): Promise<void> {
     }
 }
 
-export { addChat, getChatsMetadata, getChat, addMessage }
+export {
+	addChat, getChatsMetadata, getChat, addMessage
+}

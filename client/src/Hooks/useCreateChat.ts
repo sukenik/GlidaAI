@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { addChat, type iAddChatVars } from '../API/chats'
 
-// TODO: test & add optimistic update
-
 export const useCreateChat = () => {
 	const queryClient = useQueryClient()
 
@@ -11,6 +9,7 @@ export const useCreateChat = () => {
 		mutationFn: (vars: iAddChatVars) => addChat(vars),
 		onSuccess: () => {
 			queryClient.clear()
+			queryClient.invalidateQueries({ queryKey: ['chats'] })
 		},
 		onError: (error) => {
 			if (axios.isAxiosError(error)) {

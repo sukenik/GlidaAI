@@ -15,3 +15,11 @@ export const addChat = async (vars: iAddChatVars) => {
 
 	return res.data
 }
+
+export const getChatsMetadata = async (userId: string) => {
+	const res = await axios.get(
+		`http://localhost:3000/chats/${userId}`,
+	)
+
+	return res.data
+}

@@ -1,11 +1,11 @@
+import SendIcon from '@mui/icons-material/Send'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { styled } from '@mui/system'
 import { useState, type ChangeEvent, type FC, type KeyboardEvent } from 'react'
 import { DRAWER_WIDTH_IN_PX } from '../consts'
 import { useAuth } from '../context/AuthContext'
-import SendIcon from '@mui/icons-material/Send'
-import InputAdornment from '@mui/material/InputAdornment'
-import IconButton from '@mui/material/IconButton'
 import { useCreateChat } from '../Hooks/useCreateChat'
 
 interface iStyledContainerProps {
@@ -37,7 +37,6 @@ const Chat: FC<iProps> = ({ isDrawerOpen }) => {
 	const { createChat } = useCreateChat()
 
 	const handleSendClick = () => {
-		// Send message to backend
 		createChat({
 			userId: currentUser?.uid ?? '',
 			message
@@ -58,7 +57,7 @@ const Chat: FC<iProps> = ({ isDrawerOpen }) => {
 	return (
 		<StyledContainer open={isDrawerOpen}>
 			<h1 style={{ textAlign: 'center', margin: 'auto' }}>
-				{`Hello ${currentUser?.displayName ?? ''}`}
+				{`Hello, ${currentUser?.displayName ?? ''}`}
 			</h1>
 			<TextField
 				label={'Ask anything'}

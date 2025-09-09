@@ -19,6 +19,8 @@ import Typography from '@mui/material/Typography'
 import { type FC } from 'react'
 import { DRAWER_WIDTH_IN_PX } from '../consts'
 import { useAuth } from '../context/AuthContext'
+import { useGetChatsMetadata } from '../Hooks/useGetChatsMetadata'
+import ChatList from './ChatList'
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: DRAWER_WIDTH_IN_PX,
@@ -111,6 +113,8 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 	const theme = useTheme()
 	const { currentUser } = useAuth()
 
+	const chats = useGetChatsMetadata(currentUser?.uid ?? '')
+
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
@@ -140,7 +144,7 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 				</IconButton>
 				</DrawerHeader>
 				<Divider />
-				<ListItem key={'new-chat'} disablePadding sx={{ display: 'block', marginBottom: 'auto' }}>
+				<ListItem key={'new-chat'} disablePadding sx={{ display: 'block' }}>
 					<ListItemButton
 						sx={[
 							{
@@ -168,7 +172,13 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 						}
 					</ListItemButton>
 				</ListItem>
-				<ListItem key={'profile'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
+				<Divider />
+				{
+					isOpen &&
+					<ChatList chats={chats} />
+				}
+				<Divider style={{ marginTop: 'auto' }} />
+				<ListItem key={'profile'} disablePadding sx={{ display: 'block' }}>
 					<ListItemButton
 						onClick={handleUserModalToggle}
 						sx={[

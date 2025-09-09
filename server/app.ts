@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import { addChat } from './src/schema/chats'
-import { addUser } from './src/schema/users'
+import { addChat, getChatsMetadata } from './src/schema/chats'
+import { addUser, getChatIdsByUserId } from './src/schema/users'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -13,20 +13,21 @@ app.get('/', (req, res) => {
 	res.send('Hello from Express!')
 })
 
-app.get('/chat/1', async (req, res) => {
-	// await addMessage('hU9ZDon376MZCWWdffuk', 'Hello, who are Dreamville?')
-	// await addChat('s9036218', 'Your favorite night song?')
-	// console.log(await getChatsMetadata(['Pt9RBgGVpUUbw62cdzvM', 'W32iGUGK8WW8NnQRQ82W']))
+app.get('/chats/:userId', async (req, res) => {
+	const userId = req.params.userId
 
-	res.send('Hi')
+	const chatIds = await getChatIdsByUserId(userId)
+	const chats = await getChatsMetadata(chatIds)
+
+	res.status(200).send(chats)
 })
 
 app.post('/chat', async (req, res) => {
 	const { userId, message } = req.body
 
-	await addChat(userId, message)
+	const newChat = await addChat(userId, message)
 
-	res.send('Hi')
+	res.status(200).send(newChat)
 })
 
 app.post('/user', async (req, res) => {
