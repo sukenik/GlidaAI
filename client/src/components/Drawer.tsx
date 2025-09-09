@@ -17,10 +17,12 @@ import { styled, useTheme, type CSSObject, type Theme } from '@mui/material/styl
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { type FC } from 'react'
-import { DRAWER_WIDTH_IN_PX } from '../consts'
+import { useNavigate } from 'react-router'
+import { APP_NAME, DRAWER_WIDTH_IN_PX, HOME_ROUTE } from '../consts'
 import { useAuth } from '../context/AuthContext'
 import { useGetChatsMetadata } from '../Hooks/useGetChatsMetadata'
 import ChatList from './ChatList'
+import iceCream from '/ice-cream.png'
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: DRAWER_WIDTH_IN_PX,
@@ -112,8 +114,13 @@ interface iProps {
 const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle }) => {
 	const theme = useTheme()
 	const { currentUser } = useAuth()
+	const navigate = useNavigate()
 
 	const chats = useGetChatsMetadata(currentUser?.uid ?? '')
+
+	const handleNewChatClick = () => {
+		navigate(HOME_ROUTE)
+	}
 
 	return (
 		<Box sx={{ display: 'flex' }}>
@@ -126,14 +133,15 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 						onClick={handleDrawerToggle}
 						edge='start'
 						sx={[
-							{ marginRight: 5 },
+							{ marginRight: '18px' },
 							isOpen && { display: 'none' },
 						]}
 					>
 						<MenuIcon />
 					</IconButton>
+					<img src={iceCream} alt={`${APP_NAME} icon`} style={{ height: '48px', width: '48px' }} />
 					<Typography variant='h6' noWrap component='div'>
-						{'Glida AI'}
+						{APP_NAME}
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -146,6 +154,7 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 				<Divider />
 				<ListItem key={'new-chat'} disablePadding sx={{ display: 'block' }}>
 					<ListItemButton
+						onClick={handleNewChatClick}
 						sx={[
 							{
 								minHeight: 48,

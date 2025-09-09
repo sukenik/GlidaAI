@@ -9,7 +9,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import App from './App.tsx'
 import PrivateRoute from './components/PrivateRoute.tsx'
 import LoginPage from './components/SignInPage.tsx'
-import { HOME_ROUTE, SIGN_IN_ROUTE } from './consts.ts'
+import { CHAT_ROUTE, HOME_ROUTE, SIGN_IN_ROUTE } from './consts.ts'
 import { AuthProvider } from './context/AuthContext.tsx'
 import './index.css'
 
@@ -28,8 +28,9 @@ root.render(
 			<StrictMode>
 				<BrowserRouter>
 					<Routes>
-						<Route path={HOME_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
 						<Route path={SIGN_IN_ROUTE} element={<LoginPage />} />
+						<Route path={HOME_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
+						<Route path={CHAT_ROUTE} element={<PrivateRoute><App /></PrivateRoute>} />
 					</Routes>
 				</BrowserRouter>
 			</StrictMode>

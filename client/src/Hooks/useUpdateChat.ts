@@ -1,19 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { useNavigate } from 'react-router'
 import type { iChat } from '../../../entities'
-import { addChat, type iAddChatVars } from '../API/chats'
+import { updateChat, type iUpdateChatVars } from '../API/chats'
 import { CACHE_CHAT_QUERY_KEY } from '../consts'
 
-export const useCreateChat = () => {
+export const useUpdateChat = () => {
 	const queryClient = useQueryClient()
-	const navigate = useNavigate()
 
 	const { mutate } = useMutation({
-		mutationFn: (vars: iAddChatVars) => addChat(vars),
+		mutationFn: (vars: iUpdateChatVars) => updateChat(vars.chatId, vars.message),
 		onSuccess: (data: iChat) => {
 			queryClient.setQueryData([`${CACHE_CHAT_QUERY_KEY}${data.id}`], data)
-			navigate(`/chat/${data.id}`)
 		},
 		onError: (error) => {
 			if (axios.isAxiosError(error)) {
@@ -26,5 +23,5 @@ export const useCreateChat = () => {
 		}
 	})
 
-	return { createChat: mutate }
+	return { updateChat: mutate}
 }
