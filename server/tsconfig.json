@@ -3,6 +3,6 @@
   "compilerOptions": {
     "preserveConstEnums": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../entities.ts"],
   "exclude": ["**/*.spec.ts"]
 }

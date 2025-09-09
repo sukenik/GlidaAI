@@ -1,18 +1,19 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
 import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState, type ChangeEvent, type FC } from 'react'
 import { useNavigate } from 'react-router'
-import GoogleLogo from '../assets/Google.png'
 import GitHubLogo from '../assets/GitHub.png'
+import GoogleLogo from '../assets/Google.png'
 import { HOME_ROUTE } from '../consts'
 import { useAuth } from '../context/AuthContext'
-import InputAdornment from '@mui/material/InputAdornment'
-import IconButton from '@mui/material/IconButton'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { useCreateUser } from '../Hooks/useCreateUser'
 
 const StyledBox = styled(Box)({
 	width: '100%',
@@ -36,6 +37,7 @@ const LoginPage: FC = () => {
     const navigate = useNavigate()
 
     const { login, signUp, signWithGoogle, signWithGithub } = useAuth()
+	const { createUser } = useCreateUser()
 
 	const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value)
@@ -87,36 +89,62 @@ const LoginPage: FC = () => {
         try {
 			resetErrors()
             setLoading(true)
-            isSignUp ? await signUp(email, password) : await login(email, password)
+
+			if (isSignUp) {
+				const user = await signUp(email, password)
+
+				createUser(user.user.uid)
+			}
+			else {
+				await login(email, password)
+			}
+
             navigate(HOME_ROUTE)
-        } catch {
-            setGeneralError('Failed to sign in')
-            setLoading(false)
         }
+		catch {
+            setGeneralError('Failed to sign in')
+        }
+		finally {
+			setLoading(false)
+		}
 	}
 
     const handleSignWithGoogle = async () => {
         try {
 			resetErrors()
             setLoading(true)
-            await signWithGoogle()
+
+			const user = await signWithGoogle()
+
+			createUser(user.user.uid)
+
             navigate(HOME_ROUTE)
-        } catch {
-            setGeneralError('Failed to sign in with Google')
-            setLoading(false)
         }
+		catch {
+            setGeneralError('Failed to sign in with Google')
+        }
+		finally {
+			setLoading(false)
+		}
     }
 
     const handleSignWithGithub = async () => {
         try {
 			resetErrors()
             setLoading(true)
-            await signWithGithub()
+
+            const user = await signWithGithub()
+
+			createUser(user.user.uid)
+
             navigate(HOME_ROUTE)
-        } catch {
-            setGeneralError('Failed to sign in with GitHub')
-            setLoading(false)
         }
+		catch {
+            setGeneralError('Failed to sign in with GitHub')
+        }
+		finally {
+			setLoading(false)
+		}
     }
 
   	return (

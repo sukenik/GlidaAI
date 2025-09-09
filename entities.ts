@@ -1,5 +1,3 @@
-import { FieldValue } from "firebase-admin/firestore"
-
 export interface iUser {
     chatIds: string[]
 }
@@ -12,7 +10,7 @@ export interface iMessage {
 export interface iBaseChat {
 	id: string
 	title: string
-	lastUpdate: FieldValue
+	lastUpdate: string
 }
 
 export interface iChat extends iBaseChat {
