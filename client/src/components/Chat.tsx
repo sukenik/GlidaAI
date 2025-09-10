@@ -67,8 +67,6 @@ const Chat: FC<iProps> = ({ isDrawerOpen }) => {
 		setMessage(e.target.value)
 	}
 
-	console.log(chat)
-
 	return (
 		<StyledContainer open={isDrawerOpen}>
 			{

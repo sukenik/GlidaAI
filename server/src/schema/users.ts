@@ -1,4 +1,4 @@
-import { DocumentReference, FieldPath } from 'firebase-admin/firestore'
+import { DocumentReference, FieldPath, FieldValue } from 'firebase-admin/firestore'
 import { iUser } from '../../../entities'
 import db from '../firestore'
 
@@ -40,4 +40,17 @@ async function getChatIdsByUserId(userId: string): Promise<string[]> {
 	return []
 }
 
-export { addUser, getChatIdsByUserId }
+async function deleteUserChat(userId: string, chatId: string): Promise<string[]> {
+    try {
+        const userRef = db.collection(USERS_COLLECTION).doc(userId)
+        await userRef.update({
+            chatIds: FieldValue.arrayRemove(chatId)
+        })
+    } catch (error) {
+        console.error('Error delete chat: ', error)
+    }
+
+	return []
+}
+
+export { addUser, getChatIdsByUserId, deleteUserChat }

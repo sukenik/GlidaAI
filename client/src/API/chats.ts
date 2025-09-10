@@ -6,9 +6,15 @@ export interface iAddChatVars {
 	userId: string
 	message: string
 }
+
 export interface iUpdateChatVars {
 	chatId: string
 	message: string
+}
+
+export interface iDeleteChatVars {
+	chatId: string
+	userId: string
 }
 
 export const addChat = async (vars: iAddChatVars) => {
@@ -40,6 +46,17 @@ export const updateChat = async (chatId: string, message: string) => {
 	const res = await axios.put(
 		`http://localhost:3000/chat/${chatId}`,
 		{ message }
+	)
+
+	return res.data
+}
+
+export const deleteChat = async (vars: iDeleteChatVars) => {
+	const { chatId, userId } = vars
+
+	const res = await axios.delete(
+		`http://localhost:3000/chat/${chatId}`,
+		{ data: userId }
 	)
 
 	return res.data

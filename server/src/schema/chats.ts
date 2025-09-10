@@ -127,6 +127,16 @@ async function addMessage(chatId: string, content: string): Promise<void> {
     }
 }
 
+async function deleteChat(chatId: string): Promise<void> {
+    try {
+        db.collection(CHATS_COLLECTION).doc(chatId).delete()
+
+        console.log('Chat successfully deleted!')
+    } catch (error) {
+        console.error('Error deleting chat: ', error)
+    }
+}
+
 export {
-	addChat, getChatsMetadata, getChat, addMessage
+	addChat, getChatsMetadata, getChat, addMessage, deleteChat
 }

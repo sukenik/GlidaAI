@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import { addChat, addMessage, getChat, getChatsMetadata } from './src/schema/chats'
-import { addUser, getChatIdsByUserId } from './src/schema/users'
+import { addChat, addMessage, deleteChat, getChat, getChatsMetadata } from './src/schema/chats'
+import { addUser, deleteUserChat, getChatIdsByUserId } from './src/schema/users'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -46,6 +46,17 @@ app.put('/chat/:chatId', async (req, res) => {
 	const newChat = await addMessage(chatId, message)
 
 	res.status(200).send(newChat)
+})
+
+app.delete('/chat/:chatId', async (req, res) => {
+	const chatId = req.params.chatId
+
+	const { userId } = req.body
+
+	deleteChat(chatId)
+	deleteUserChat(userId, chatId)
+
+	res.status(200)
 })
 
 app.post('/user', async (req, res) => {
