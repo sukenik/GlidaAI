@@ -85,21 +85,21 @@ async function addChat(userId: string, content: string): Promise<iChat> {
 
 async function getChat(chatId: string): Promise<iChat | null> {
     try {
-        const chatRef = await db.collection(CHATS_COLLECTION).doc(chatId).get()
+        const chatSnapshot = await db.collection(CHATS_COLLECTION).doc(chatId).get()
 
-		if (!chatRef.exists) {
+		if (!chatSnapshot.exists) {
 			console.log('No such chat!')
 			return null
 		}
 
-		const chatData = chatRef.data() as iBaseChat
-		
-		const messagesSnapshot = await chatRef.ref.collection('messages').get()
+		const chatData = chatSnapshot.data() as iBaseChat
+
+		const messagesSnapshot = await chatSnapshot.ref.collection(MESSAGES_COLLECTION).get()
 		const messages = messagesSnapshot.docs.map(doc => doc.data() as iMessage)
 
 		return {
 			...chatData,
-			id: chatRef.id,
+			id: chatSnapshot.id,
 			messages
 		}
     } catch (error) {
@@ -113,8 +113,11 @@ async function addMessage(chatId: string, content: string): Promise<void> {
     try {
         const chatRef = db.collection(CHATS_COLLECTION).doc(chatId)
 		const messagesRef = chatRef.collection(MESSAGES_COLLECTION)
-        
-        const response = await generateResponse(content)
+
+		const messagesSnapshot = await messagesRef.get()
+		const messages = messagesSnapshot.docs.map(doc => doc.data() as iMessage)
+
+        const response = await generateResponse(content, messages)
 
         await messagesRef.add({
             content,
@@ -127,16 +130,6 @@ async function addMessage(chatId: string, content: string): Promise<void> {
     }
 }
 
-async function deleteChat(chatId: string): Promise<void> {
-    try {
-        db.collection(CHATS_COLLECTION).doc(chatId).delete()
-
-        console.log('Chat successfully deleted!')
-    } catch (error) {
-        console.error('Error deleting chat: ', error)
-    }
-}
-
 export {
-	addChat, getChatsMetadata, getChat, addMessage, deleteChat
+	addChat, getChatsMetadata, getChat, addMessage
 }

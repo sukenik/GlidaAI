@@ -1,4 +1,5 @@
-import { useState, type FC } from 'react'
+import { useEffect, useState, type FC } from 'react'
+import { socket } from './socket'
 import Chat from './components/Chat'
 import Drawer from './components/Drawer'
 import UserModal from './components/UserModal'
@@ -6,6 +7,16 @@ import UserModal from './components/UserModal'
 const App: FC = () => {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [showUserModal, setShowUserModal] = useState(false)
+
+	useEffect(() => {
+		socket.on('createChat', (message: string) => {
+			console.log('new message', message)
+		})
+
+		return () => {
+			socket.off('createChat')
+		}
+	}, [])
 
 	const handleDrawerToggle = () => {
 		setIsDrawerOpen(prevState => !prevState)

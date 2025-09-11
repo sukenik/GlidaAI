@@ -1,16 +1,45 @@
-import express from 'express'
 import cors from 'cors'
-import { addChat, addMessage, deleteChat, getChat, getChatsMetadata } from './src/schema/chats'
-import { addUser, deleteUserChat, getChatIdsByUserId } from './src/schema/users'
+import express from 'express'
+import http from 'http'
+import { Server } from 'socket.io'
+import { addChat, addMessage, getChat, getChatsMetadata } from './src/schema/chats'
+import { addUser, getChatIdsByUserId } from './src/schema/users'
+import { iCreateChatVars } from '../types'
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const server = http.createServer(app)
+const io = new Server(server, {
+	cors: {
+		origin: '*',
+		methods: ['GET', 'POST', 'PUT']
+	}
+})
 
 app.use(cors())
 app.use(express.json())
 
+io.on('connection', (socket) => {
+	console.log('A user connected')
+
+	socket.on('createChat', async (vars: iCreateChatVars) => {
+		const { userId, message } = vars
+
+		const newChat = await addChat(userId, message)
+
+		io.emit('createChat', newChat)
+	})
+
+	socket.on('disconnect', () => {
+		console.log('User disconnected')
+	})
+})
+
 app.get('/', (req, res) => {
 	res.send('Hello from Express!')
+})
+
+server.listen(3000, () => {
+  	console.log('Listening on http://localhost:3000')
 })
 
 app.get('/chats/:userId', async (req, res) => {
@@ -30,14 +59,6 @@ app.get('/chat/:chatId', async (req, res) => {
 	res.status(200).send(chat)
 })
 
-app.post('/chat', async (req, res) => {
-	const { userId, message } = req.body
-
-	const newChat = await addChat(userId, message)
-
-	res.status(200).send(newChat)
-})
-
 app.put('/chat/:chatId', async (req, res) => {
 	const chatId = req.params.chatId
 
@@ -48,25 +69,10 @@ app.put('/chat/:chatId', async (req, res) => {
 	res.status(200).send(newChat)
 })
 
-app.delete('/chat/:chatId', async (req, res) => {
-	const chatId = req.params.chatId
-
-	const { userId } = req.body
-
-	deleteChat(chatId)
-	deleteUserChat(userId, chatId)
-
-	res.status(200)
-})
-
 app.post('/user', async (req, res) => {
 	const { userId } = req.body
 
 	await addUser(userId)
 
 	res.status(200).send({ message: 'User added successfully' })
-})
-
-app.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT}`)
 })

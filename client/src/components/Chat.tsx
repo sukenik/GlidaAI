@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext'
 import { useCreateChat } from '../Hooks/useCreateChat'
 import { useGetChat } from '../Hooks/useGetChat'
 import { useUpdateChat } from '../Hooks/useUpdateChat'
+import { socket } from '../socket'
 
 interface iStyledContainerProps {
 	open?: boolean
@@ -34,6 +35,7 @@ interface iProps {
 }
 
 const Chat: FC<iProps> = ({ isDrawerOpen }) => {
+	// Handle state here
 	const [message, setMessage] = useState('')
 
 	const { currentUser } = useAuth()
@@ -45,15 +47,17 @@ const Chat: FC<iProps> = ({ isDrawerOpen }) => {
 	const chat = useGetChat(chatId)
 
 	const handleSendClick = () => {
-		chatId
-			? updateChat({
-				chatId,
-				message
-			})
-			: createChat({
-				userId: currentUser?.uid ?? '',
-				message
-			})
+		socket.emit('createChat', { userId: currentUser?.uid ?? '', message })
+
+		// chatId
+		// 	? updateChat({
+		// 		chatId,
+		// 		message
+		// 	})
+		// 	: createChat({
+		// 		userId: currentUser?.uid ?? '',
+		// 		message
+		// 	})
 		setMessage('')
 	}
 

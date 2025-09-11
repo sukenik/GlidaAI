@@ -9,6 +9,8 @@ export const useCreateChat = () => {
 	const queryClient = useQueryClient()
 	const navigate = useNavigate()
 
+	// socket.emit('createChat', { userId: currentUser?.uid ?? '', message })
+
 	const { mutate } = useMutation({
 		mutationFn: (vars: iAddChatVars) => addChat(vars),
 		onSuccess: (data: iChat) => {

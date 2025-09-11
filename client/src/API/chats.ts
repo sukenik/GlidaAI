@@ -55,8 +55,7 @@ export const deleteChat = async (vars: iDeleteChatVars) => {
 	const { chatId, userId } = vars
 
 	const res = await axios.delete(
-		`http://localhost:3000/chat/${chatId}`,
-		{ data: userId }
+		`http://localhost:3000/chat/${chatId}?userId=${userId}`
 	)
 
 	return res.data

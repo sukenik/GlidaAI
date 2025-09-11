@@ -18,10 +18,10 @@ const ChatItemMenu: FC<iProps> = ({ handleClose, anchorEl, userId, chatId }) => 
 	const isItemMenuOpen = Boolean(anchorEl)
 	const popoverId = isItemMenuOpen ? 'simple-popover' : undefined
 
-	const { deleteChat } = useDeleteChat()
+	const { deleteChat } = useDeleteChat({ chatId, userId })
 
 	const handleDeleteClick = () => {
-		deleteChat({ chatId, userId  })
+		deleteChat()
 	}
 
 	return (

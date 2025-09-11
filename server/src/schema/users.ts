@@ -40,17 +40,4 @@ async function getChatIdsByUserId(userId: string): Promise<string[]> {
 	return []
 }
 
-async function deleteUserChat(userId: string, chatId: string): Promise<string[]> {
-    try {
-        const userRef = db.collection(USERS_COLLECTION).doc(userId)
-        await userRef.update({
-            chatIds: FieldValue.arrayRemove(chatId)
-        })
-    } catch (error) {
-        console.error('Error delete chat: ', error)
-    }
-
-	return []
-}
-
-export { addUser, getChatIdsByUserId, deleteUserChat }
+export { addUser, getChatIdsByUserId }

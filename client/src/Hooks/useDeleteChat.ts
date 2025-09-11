@@ -1,16 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import type { iChat } from '../../../entities'
 import { deleteChat, type iDeleteChatVars } from '../API/chats'
 import { CACHE_CHAT_QUERY_KEY } from '../consts'
 
-export const useDeleteChat = () => {
+export const useDeleteChat = (vars: iDeleteChatVars) => {
 	const queryClient = useQueryClient()
 
 	const { mutate } = useMutation({
-		mutationFn: (vars: iDeleteChatVars) => deleteChat(vars),
+		mutationFn: () => deleteChat(vars),
 		onSuccess: () => {
-			// queryClient.cancelQueries([`${CACHE_CHAT_QUERY_KEY}${data.id}`])
+			queryClient.cancelQueries({
+				queryKey: [CACHE_CHAT_QUERY_KEY, vars.chatId]
+			})
 		},
 		onError: (error) => {
 			if (axios.isAxiosError(error)) {

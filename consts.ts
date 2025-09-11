@@ -1,0 +1,1 @@
+const CHAT_CHANNEL = 'chat'
