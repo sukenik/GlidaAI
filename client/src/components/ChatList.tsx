@@ -1,16 +1,15 @@
 import List from '@mui/material/List'
 import { type FC } from 'react'
 import { type iBaseChat } from '../../../entities'
-import ChatItem from './ChatItem'
-import { useParams } from 'react-router'
 import { useAuth } from '../context/AuthContext'
+import ChatItem from './ChatItem'
 
 interface iProps {
 	chats: iBaseChat[]
+	openChatId: string | undefined
 }
 
-const ChatList: FC<iProps> = ({ chats }) => {
-	const openChatId = useParams().chatId
+const ChatList: FC<iProps> = ({ chats, openChatId }) => {
 	const userId = useAuth().currentUser?.uid || ''
 
 	return (

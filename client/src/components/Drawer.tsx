@@ -17,12 +17,13 @@ import { styled, useTheme, type CSSObject, type Theme } from '@mui/material/styl
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { type FC } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { APP_NAME, DRAWER_WIDTH_IN_PX, HOME_ROUTE } from '../consts'
 import { useAuth } from '../context/AuthContext'
 import { useGetChatsMetadata } from '../Hooks/useGetChatsMetadata'
 import ChatList from './ChatList'
 import iceCream from '/ice-cream.png'
+import Tooltip from '@mui/material/Tooltip'
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: DRAWER_WIDTH_IN_PX,
@@ -115,6 +116,7 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 	const theme = useTheme()
 	const { currentUser } = useAuth()
 	const navigate = useNavigate()
+	const openChatId = useParams().chatId
 
 	const chats = useGetChatsMetadata(currentUser?.uid ?? '')
 
@@ -153,38 +155,44 @@ const Drawer: FC<iProps> = ({ isOpen, handleDrawerToggle, handleUserModalToggle 
 				</DrawerHeader>
 				<Divider />
 				<ListItem key={'new-chat'} disablePadding sx={{ display: 'block' }}>
-					<ListItemButton
-						onClick={handleNewChatClick}
-						sx={[
+					<Tooltip title={'New chat'} placement={'right'} arrow>
+						<ListItemButton
+							onClick={handleNewChatClick}
+							sx={[
+								{
+									minHeight: 48,
+									px: 2.5,
+								},
+								isOpen
+									? { justifyContent: 'initial' }
+									: { justifyContent: 'center' },
+								!openChatId && {
+									backgroundColor: 'action.selected',
+									':hover': { backgroundColor: 'action.selected' }
+								}
+							]}
+						>
+							<ListItemIcon sx={[
+								{
+									minWidth: 0,
+									justifyContent: 'center',
+								},
+								isOpen
+									? { mr: 3 }
+									: { mr: 'auto' }
+							]}>
+								<AddBoxOutlinedIcon />
+							</ListItemIcon>
 							{
-								minHeight: 48,
-								px: 2.5,
-							},
-							isOpen
-								? { justifyContent: 'initial' }
-								: { justifyContent: 'center' }
-						]}
-					>
-						<ListItemIcon sx={[
-							{
-								minWidth: 0,
-								justifyContent: 'center',
-							},
-							isOpen
-								? { mr: 3 }
-								: { mr: 'auto' }
-						]}>
-							<AddBoxOutlinedIcon />
-						</ListItemIcon>
-						{
-							isOpen && <ListItemText primary={'New Chat'} />
-						}
-					</ListItemButton>
+								isOpen && <ListItemText primary={'New Chat'} />
+							}
+						</ListItemButton>
+					</Tooltip>
 				</ListItem>
 				<Divider />
 				{
 					isOpen &&
-					<ChatList chats={chats} />
+					<ChatList chats={chats} openChatId={openChatId} />
 				}
 				<Divider style={{ marginTop: 'auto' }} />
 				<ListItem key={'profile'} disablePadding sx={{ display: 'block' }}>
